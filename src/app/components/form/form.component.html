@@ -1,0 +1,175 @@
+<H3 align="center"><strong> Construcción y Fragmentación de datagramas IPv4 </strong></H3>
+<div class="row">
+  <div class="col-4" style="background-color:rgb(255, 255, 255);"></div>
+  <div class="col-4" style="background-color:lightcyan;">
+    <form class="example-form" autocomplete="off" [formGroup]="reactiveForm">
+      <mat-form-field class="example-full-width">
+        <h6><strong>Unidad maxima de transferencia de red</strong></h6>
+        
+        <input 
+          matInput
+          class="form-control"
+          type="number"
+          formControlName="mtu"
+          
+          
+        />
+        
+    
+      </mat-form-field>
+
+      <br />
+
+      <mat-form-field class="example-full-width">
+        <h6><strong>Longitud total del datagrama</strong></h6>
+        
+        <input
+          matInput
+          class="form-control"
+          type="number"
+         
+          formControlName="totalLength"
+        />
+      </mat-form-field>
+
+      <br />
+
+      <h6><strong>Protocolo</strong></h6>
+
+      <mat-radio-group formControlName="protocol" aria-label="Protocolo">
+        <mat-radio-button value="ICMP" checked> ICMP</mat-radio-button>
+        <br>
+        <mat-radio-button value="TCP"> TCP </mat-radio-button>
+        <br>
+        <mat-radio-button value="UDP"> UDP</mat-radio-button>
+      </mat-radio-group>
+
+      <br />
+
+      <mat-form-field class="example-full-width">
+        <h6><strong>Direccion IP de origen</strong></h6>
+        <input
+          matInput
+          class="form-control"
+          type="text"
+          
+          formControlName="sourceIP"
+        />
+      </mat-form-field>
+
+      <br />
+
+      <mat-form-field class="example-full-width">
+        <h6><strong>Direccion IP de destino</strong></h6>
+        <input
+          matInput
+          class="form-control"
+          type="text"
+          
+          formControlName="destinationIP"
+        />
+       
+      </mat-form-field>
+
+      <br />
+
+      <section>
+        <div class="example-button-row" align="center">
+          <button class="btn btn-success" role="button" (click)='save()'
+          >
+            Calcular
+          </button>
+          &nbsp; &nbsp;
+          <button class="btn btn-info" role="button" (click)='aleatory()'
+          
+          >
+            Aleatorio
+          </button>
+        </div>
+      </section>
+    </form>
+  </div>
+  <br />
+  <br/>
+  <h4 align="center" > ________________________________________</h4>
+  <h3 align="center"><strong>Calculos</strong></h3>
+
+  <br>
+  <br>
+  <div class="col-4" ></div>
+  <div class="col-4"style="background-color:lightcyan;" >
+    <h6 *ngIf="data.length > 0"><strong>
+      Unidad maxima de transferencia de red: </strong><small>{{ randomMTU }} bytes</small>
+    </h6>
+    <h6 *ngIf="data.length > 0"><strong>
+      Longitud total del datagrama:</strong> <small>{{ randomLength }} bytes</small>
+    </h6>
+  
+    <mat-accordion style="background-color:lightcyan;">
+      <mat-expansion-panel style="background-color:lightcyan;"
+        (opened)="panelOpenState = true"
+        (closed)="panelOpenState = false"
+        *ngFor="let fragment of pageSliceDec; let i = index"
+      >
+        <mat-expansion-panel-header>
+          <mat-panel-title style="background-color:lightcyan"><h4>Fragmento{{ fragment.index }} </h4></mat-panel-title>
+   
+        </mat-expansion-panel-header>
+        <div class="row">
+          <div class="col-10" style="background-color:lightcyan;">
+            <ul>
+              
+              <li><h6><strong>Versión:</strong> {{ fragment.version }}</h6></li>
+                <li><h6><strong>Longitud del encabezado:</strong> {{ fragment.headerLength }} bytes </h6></li>
+                  <li><h6><strong>Servicios diferenciados:</strong> {{ fragment.differentiatedServices }}</h6></li>
+                    <li><h6><strong>Longitud total:</strong> {{ fragment.totalLength }} bytes</h6></li>
+                      <li><h6><strong>Identificación:</strong> {{ fragment.identification }}</h6></li>
+                        <li><h6><strong>Flags:</strong> {{ fragment.flags }}</h6></li>
+                          <li><h6><strong>Desplazamiento:</strong> {{ fragment.displacement }} bytes</h6></li>
+                            <li><h6><strong>Tiempo de vida:</strong> {{ fragment.timeOfLife }}</h6></li>
+                              <li><h6><strong>Protocolo:</strong> {{ fragment.protocol }}</h6></li>
+                                <li><h6><strong>Suma de comprobación:</strong> {{ fragment.checksum }}</h6></li>
+                                  <li><h6><strong>IP de origen:</strong> {{ fragment.sourceIP }}</h6></li>
+                                    <li><h6><strong>IP de destino:</strong> {{ fragment.destinationIP }}</h6></li>
+            
+
+
+
+            </ul>
+
+            <h3>________________________________________________</h3>
+          </div>
+          
+          <div>
+            <br/>
+
+            <h5><strong>Encabezado en Binario:</strong></h5>
+            <br />
+            <h5>{{ pageSliceBin[i][0] }}</h5>
+            <h5>{{ pageSliceBin[i][1] }}</h5>
+            <h5>{{ pageSliceBin[i][2] }}</h5>
+            <h5>{{ pageSliceBin[i][3] }}</h5>
+            <h5>{{ pageSliceBin[i][4] }}</h5>
+            <br />
+            <h3>________________________________________________</h3>
+            <br />
+            <h5><strong>Encabezado en Hexadecimal:</strong></h5>
+            <br />
+            <h5>{{ pageSliceHexa[i].substring(0, 29) | uppercase }}</h5>
+            <h5>{{ pageSliceHexa[i].substring(30) | uppercase }}</h5>
+
+          </div>
+        </div>
+      </mat-expansion-panel>
+      <mat-paginator style="background-color:lightcyan;"
+      *ngIf="data.length > 3"
+      [length]="data.length"
+      [pageSize]="7"
+      [pageSizeOptions]="[5]"
+      (page)="onPageChange($event)"
+    >
+    </mat-paginator>
+
+    </mat-accordion>
+  </div>
+</div>
