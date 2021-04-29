@@ -20,16 +20,16 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'datagramCalculator'`, () => {
+  it(`should have as title 'DatagramaCalculator'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('datagramCalculator');
+    expect(app.title).toEqual('DatagramaCalculator');
   });
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement;
-    expect(compiled.querySelector('.content span').textContent).toContain('datagramCalculator app is running!');
+    expect(compiled.querySelector('.content span').textContent).toContain('DatagramaCalculator app is running!');
   });
 });

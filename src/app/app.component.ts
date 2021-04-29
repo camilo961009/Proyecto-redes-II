@@ -9,6 +9,6 @@ export class AppComponent {
 
   @Output() data: EventEmitter<any> = new EventEmitter();
 
-  title = 'datagramCalculator';
+  title = 'DatagramaCalculator';
 
 }

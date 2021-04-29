@@ -3,8 +3,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatButtonModule } from '@angular/material/button';
-import {MatExpansionModule} from '@angular/material/expansion';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import {MatCardModule} from '@angular/material/card';
 
 
 @NgModule({
@@ -13,7 +13,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatInputModule,
     MatRadioModule,
     MatButtonModule,
-    MatExpansionModule,
+    MatCardModule,
     MatPaginatorModule
   ]
 })

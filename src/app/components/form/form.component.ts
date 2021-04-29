@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { PageEvent } from '@angular/material/paginator';
-import { FragmenterService } from '../../services/fragmenter.service';
-import { Datagram } from '../../models/datagram';
+import { FragmentacionService } from '../../servicios/fragmentacion.service';
+import { Datagrama } from '../../modelos/datagrama';
 import swal from 'sweetalert2'
 
 
@@ -14,30 +13,26 @@ import swal from 'sweetalert2'
 })
 export class FormComponent implements OnInit {
 
-  panelOpenState = false;
+  mtu: number;
+  longitudTotal: number;
   reactiveForm: FormGroup;
-  data: Datagram[] = [];
-  dataHexa: string[] = [];
-  dataBin: string[][] = [];
-  pageSliceDec: Datagram[] = [];
-  pageSliceHexa: string[] = [];
-  pageSliceBin: string[][] = [];
+  datagrama: Datagrama[] = [];
+  datagramaHexadecimal: string[] = [];
+  datagramaBinario: string[][] = [];
   patternIP: string;
-  randomMTU: number;
-  randomLength: number;
-  protocol:string;
+  protocolo:string;
 
   constructor(
     private formBuilder: FormBuilder,
-    private fragmenterService: FragmenterService
+    private FragmentacionService: FragmentacionService
   ) {
 
-    this.randomMTU = 0;
-    this.randomLength = 0;
+    this.mtu = 0;
+    this.longitudTotal = 0;
     this.patternIP = '^([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.' +
     '(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){2}' +
     '([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])$';
-    this.reactiveForm = this.createForm();
+    this.reactiveForm = this.crearFormulario();
 
   }
 
@@ -45,55 +40,35 @@ export class FormComponent implements OnInit {
   
   }
 
-  createForm(): FormGroup {
+  crearFormulario(): FormGroup {
     return this.formBuilder.group({
       mtu: ['', [Validators.required, Validators.min(68), Validators.max(1500)]],
-      totalLength: ['', [Validators.required, Validators.min(576), Validators.max(65535)]],
-      protocol : ['ICMP', [Validators.required]],
-      sourceIP: ['', [Validators.required, Validators.pattern(this.patternIP)]],
-      destinationIP: ['', [Validators.required, Validators.pattern(this.patternIP)]]
+      longitudTotal: ['', [Validators.required, Validators.min(576), Validators.max(65535)]],
+      protocolo : ['ICMP', [Validators.required]],
+      ipOrigen: ['', [Validators.required, Validators.pattern(this.patternIP)]],
+      ipDestino: ['', [Validators.required, Validators.pattern(this.patternIP)]]
     });
   }
 
-  save(): void {
+  fragmentar(): void {
 
-    this.data = this.fragmenterService.fragment(this.reactiveForm.value);
-    this.dataHexa = this.fragmenterService.getFragmentsHexa();
-    this.dataBin = this.fragmenterService.getFragmentsBin();
-    this.randomMTU = this.fragmenterService.getMTU();
-    this.randomLength = this.fragmenterService.getLength();
-    this.pageSliceDec = this.data.slice(0, 3);
-    this.pageSliceHexa = this.dataHexa.slice(0, 3);
-    this.pageSliceBin = this.dataBin.slice(0, 3);
-    this.reactiveForm = this.createForm();
+    this.datagrama = this.FragmentacionService.fragmento(this.reactiveForm.value);
+    this.datagramaHexadecimal = this.FragmentacionService.getfragmentosHexadecimal();
+    this.datagramaBinario = this.FragmentacionService.getfragmentosBinario();
+    this.mtu = this.FragmentacionService.getMTU();
+    this.longitudTotal = this.FragmentacionService.getLength();
+    this.reactiveForm = this.crearFormulario();
     swal.fire('Fragmento(s)', `Fragmento(s) creados con exito éxito!`, 'success')
 
   }
 
-  aleatory(): void {
-    this.data = this.fragmenterService.aleatory();
-    this.dataHexa = this.fragmenterService.getFragmentsHexa();
-    this.dataBin = this.fragmenterService.getFragmentsBin();
-    this.randomMTU = this.fragmenterService.getMTU();
-    this.randomLength = this.fragmenterService.getLength();
-    this.pageSliceDec = this.data.slice(0, 3);
-    this.pageSliceHexa = this.dataHexa.slice(0, 3);
-    this.pageSliceBin = this.dataBin.slice(0, 3);
-    this.reactiveForm = this.createForm();
-  }
-  onPageChange(event: PageEvent): void {
-
-    const startIndex = event.pageIndex * event.pageSize;
-    let endIndex = startIndex + event.pageSize;
-
-    if (endIndex > this.data.length) {
-      endIndex = this.data.length;
-    }
-
-    this.pageSliceDec = this.data.slice(startIndex, endIndex);
-    this.pageSliceHexa = this.dataHexa.slice(startIndex, endIndex);
-    this.pageSliceBin = this.dataBin.slice(startIndex, endIndex);
-
+  generarAleatorio(): void {
+    this.datagrama = this.FragmentacionService.generarAleatorio();
+    this.datagramaHexadecimal = this.FragmentacionService.getfragmentosHexadecimal();
+    this.datagramaBinario = this.FragmentacionService.getfragmentosBinario();
+    this.mtu = this.FragmentacionService.getMTU();
+    this.longitudTotal = this.FragmentacionService.getLength();
+    this.reactiveForm = this.crearFormulario();
   }
 
 }
