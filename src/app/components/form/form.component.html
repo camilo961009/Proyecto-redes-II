@@ -73,6 +73,10 @@
         Longitud total del Datagrama:</strong> <small>{{longitudTotal}} bytes</small>
     </h6>
 
+    <h6  align="center"  *ngIf="datagrama.length > 0"><strong>
+      Cantidad de Fragmentos:</strong> <small>{{datagrama.length}}</small>
+  </h6>
+
     <mat-card *ngFor="let fragmento of datagrama; let i = index">
       <mat-card-title>
         <h3 align="center" style="color:darkturquoise"><strong>
